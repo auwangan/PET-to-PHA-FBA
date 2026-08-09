@@ -1,0 +1,97 @@
+# Validation Log — Week 1
+
+**Model file:** iML1515.xml
+**Downloaded from:** http://bigg.ucsd.edu/models/iML1515
+**Download date:**
+**MD5:** (run `md5sum data/iML1515.xml`)
+**cobrapy version:**
+**Solver:**
+
+> Fill in **Prediction** BEFORE running each script. That is the entire
+> point of week 1. If you fill it in afterwards you have learned nothing.
+
+---
+
+## Test 1 — Model structure
+
+**Prediction:** 3
+**Which riboflavin id would `break` have grabbed?** ribflv_p
+**What would `EX_<that id>` have physically represented?** all the B12 in all compartments
+**Interpretation:** not sure
+
+---
+
+## Test 2 — Reproduce published growth rate
+
+**Prediction:** not sure with the exact number but really small
+**Published value + citation:** https://pmc.ncbi.nlm.nih.gov/articles/PMC10400544/?utm_source
+**Within 5%? If not, which bound differs:** 0%
+**Default glucose uptake rate and units:** mmolgDW^-1h^-1
+**Interpretation:** fba is a surpsingly accurate tool under the asssumption that my citation was right and I have not misunderstood the paper
+---
+
+## Test 3 — Exchange sign convention
+
+**Prediction:** will probably be negative since glucoses are consumed to grow
+**Which bound controls maximum uptake, and why:** the rate of growth
+**What `upper_bound = -5` did, and what it means biologically:** the loss of glucose to external environment is less
+**Interpretation:** lower growth rate lower glucose intale
+
+---
+
+## Test 4 — Mass and charge balance
+**Why exchanges "fail" by design:** maybe the exchange reactions fail because glucose can't turn into nothing but rather there should a extracellular space check in the reaction
+**One imbalanced iML1515 reaction, and why curators allowed it:** NO IDEA
+**The one-line check I will run after every reaction I add:** reaction.check_mass_balance()
+**Interpretation:** when mass and charge balance disappear smth is wrong
+
+---
+
+## Test 5 — Free lunch
+
+**Prediction (growth AND status):** rowth rate negative and solver status to be error
+**Did I predict infeasible or zero? What did I learn:** i did but i better be careful with my language
+**Snippet I will re-run after every added reaction:** run the test with ATMP relaxed then run it to see whether growth is 0
+**Interpretation:** ATMP is the basic maintaiance ATP, if it is set to 0 and all reactions are closed, then the growth is 0 but if it is not then it is having free lunch
+
+---
+
+## Test 6 — Degeneracy
+
+**Prediction:** idk
+**Was the FBA value at min, max, or between:** PGI is a strong constrain only 7.64463 allowed, both PYK and PFK at upper bound for 100 percent growth rate
+**What I should have reported in the riboflavin script:**
+**Interpretation:** ??
+
+---
+
+## Test 7 — Riboflavin autopsy
+
+| # | Suspected bug | Real? | Evidence | Corrected value |
+|---|---|---|---|---|
+| 1 | `break` grabbed wrong compartment | | | | YES
+| 2 | "Overexpression" was a no-op | | | | YES
+| 3 | `b3846` may not be ribA | | | | YES 
+| 4 | `b4025` may not be pgi | | | | NO
+| 5 | Single `optimize()` hid degeneracy | | | | can't be measured
+
+**Paragraph — which were real, which were not, corrected numbers:**
+Your prediction: Q1 coud be that it finds the wrong reboflavin Q2 could be that it did not acc op anything since 1000 is the bound Q3/4 could be gene identifications Q5 idk
+
+## Test 8 — Solver
+
+**Prediction:** glpk
+**Available solvers:** ['glpk_exact', 'glpk', 'gurobi', 'hybrid', 'osqp', 'scipy']
+**Solver in use:** optlang.glpk_interface.Model
+**FBA time:** 0.1245
+**Gurobi licence obtained (y/n):** n
+
+---
+
+## Week 1 summary
+
+**What I now know how to verify that I could not before:**
+free lunch test,FBA AND FVA,the fact that when u tell the program to grap a chemical this chemical could be in 20000 differnet exchange reactions, i learnt that charge mass balance is essential to verify whether the system is buggy.
+**What surprised me most:**
+everything including how buggy my older scripts were
+**What I am still unsure about:** many things opened a new world for me i think we need to go over all the scripts to make sure i understand everything test 6 is particularly bad. And i dont understand in test 3 status optimal but i do understand how it generally works

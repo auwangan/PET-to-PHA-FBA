@@ -1,0 +1,10 @@
+data/*.xml
+*Zone.Identifier
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+*.pub
+id_ed25519*
+id_rsa*
+*.pem
+*.key
